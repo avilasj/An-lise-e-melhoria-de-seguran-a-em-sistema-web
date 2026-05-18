@@ -14,14 +14,6 @@ Projeto acadêmico da disciplina Segurança da Informação. Esta versão manté
 - Ações restritas de exclusão, alteração de status, limpeza de logs e exportação.
 - Avisos claros de que o sistema é apenas um protótipo front-end.
 
-## Limitação importante
-
-Como não existe back-end, API, banco de dados centralizado ou autenticação real, os controles são apenas simulações no navegador. O sistema não deve ser usado em produção com dados reais.
-
-## Como executar
-
-Abra o arquivo `index.html` no navegador ou publique o repositório via GitHub Pages.
-
 ## Credenciais fictícias
 
 - Aluno: `aluno@faculdade.local` / `123456`
