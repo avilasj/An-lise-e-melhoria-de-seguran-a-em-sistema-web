@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro Seguro de Ocorrências Acadêmicas</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Protótipo acadêmico - Segurança da Informação</p>
+      <h1>Registro de Ocorrências Acadêmicas</h1>
+      <p class="subtitle">Versão revisada com controles simulados de privacidade, RBAC, validação e auditoria.</p>
+    </div>
+    <div class="topbar-actions">
+      <span id="sessionBadge" class="badge muted">Sessão não iniciada</span>
+      <button id="logoutBtn" class="btn secondary hidden" type="button">Sair</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section id="loginView" class="card login-card">
+      <p class="eyebrow">Acesso</p>
+      <h2>Entrar no sistema</h2>
+      <p class="notice warning">Este é um protótipo front-end para fins didáticos. Não use dados reais. As credenciais e regras continuam expostas no navegador e não representam autenticação real de produção.</p>
+      <form id="loginForm" class="form-grid" autocomplete="off">
+        <label>E-mail
+          <input id="email" type="email" required placeholder="aluno@faculdade.local" autocomplete="username" />
+        </label>
+        <label>Senha
+          <input id="password" type="password" required minlength="6" autocomplete="current-password" />
+        </label>
+        <button class="btn primary" type="submit">Entrar</button>
+      </form>
+      <div class="demo-users">
+        <h3>Usuários fictícios para teste</h3>
+        <p><strong>Aluno:</strong> aluno@faculdade.local / 123456</p>
+        <p><strong>Professor:</strong> professor@faculdade.local / 123456</p>
+        <p><strong>Administrador:</strong> admin@faculdade.local / admin2026</p>
+      </div>
+    </section>
+
+    <section id="appView" class="hidden">
+      <section class="card">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Sessão atual</p>
+            <h2 id="currentUserName">-</h2>
+            <p id="currentUserDetails" class="subtitle">-</p>
+          </div>
+          <div class="actions">
+            <button id="exportBtn" class="btn secondary" type="button">Exportar dados permitidos</button>
+            <button id="clearLogsBtn" class="btn danger" type="button">Limpar logs</button>
+            <button id="resetBtn" class="btn secondary" type="button">Restaurar base fictícia</button>
+          </div>
+        </div>
+        <p id="securityNotice" class="notice"></p>
+        <label id="roleControl" class="role-switch">Perfil ativo
+          <select id="roleSelect">
+            <option value="ALUNO">ALUNO</option>
+            <option value="PROFESSOR">PROFESSOR</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
+        </label>
+        <div class="summary">
+          <div><strong id="totalOccurrences">0</strong><span>Total visível</span></div>
+          <div><strong id="criticalOccurrences">0</strong><span>Críticas visíveis</span></div>
+          <div><strong id="lastUpdate">-</strong><span>Última atualização</span></div>
+        </div>
+      </section>
+
+      <section class="grid two">
+        <section id="formCard" class="card">
+          <p class="eyebrow">Cadastro</p>
+          <h2>Nova ocorrência</h2>
+          <form id="occurrenceForm" class="form-grid">
+            <label>Nome do aluno <input id="studentName" required maxlength="80" pattern="[A-Za-zÀ-ÿ' -]{3,80}" /></label>
+            <label>Matrícula <input id="studentId" required maxlength="12" pattern="[0-9]{6,12}" /></label>
+            <label>CPF <input id="studentCpf" required maxlength="14" placeholder="000.000.000-00" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" /></label>
+            <label>E-mail <input id="studentEmail" required type="email" maxlength="90" /></label>
+            <label>Telefone <input id="studentPhone" maxlength="20" placeholder="(47) 99999-0000" /></label>
+            <label>Categoria
+              <select id="category" required>
+                <option value="Nota">Nota</option><option value="Frequência">Frequência</option><option value="Solicitação administrativa">Solicitação administrativa</option><option value="Outro">Outro</option>
+              </select>
+            </label>
+            <label>Prioridade
+              <select id="priority" required><option>Baixa</option><option>Média</option><option>Alta</option><option>Crítica</option></select>
+            </label>
+            <label class="span-2">Descrição <textarea id="description" required maxlength="500" rows="4"></textarea></label>
+            <label class="span-2">Observação interna <textarea id="internalNote" maxlength="300" rows="3"></textarea></label>
+            <label class="check span-2"><input id="privacyAck" type="checkbox" required /> Confirmo que usarei apenas dados fictícios e necessários para teste.</label>
+            <button class="btn primary span-2" type="submit">Registrar ocorrência</button>
+          </form>
+        </section>
+
+        <section class="card">
+          <p class="eyebrow">Busca e auditoria</p>
+          <h2>Consulta</h2>
+          <label>Buscar nos registros visíveis <input id="search" type="search" placeholder="Nome, matrícula, categoria ou status" /></label>
+          <p class="notice">A busca respeita o perfil ativo. Dados pessoais são mascarados para reduzir exposição indevida.</p>
+        </section>
+      </section>
+
+      <section class="card">
+        <div class="section-header"><h2>Ocorrências</h2></div>
+        <div class="table-wrap">
+          <table aria-label="Ocorrências acadêmicas">
+            <thead><tr><th>Aluno</th><th>CPF</th><th>Contato</th><th>Categoria</th><th>Prioridade</th><th>Status</th><th>Detalhes</th><th>Ações</th></tr></thead>
+            <tbody id="occurrencesTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="logsCard" class="card">
+        <div class="section-header"><h2>Logs de auditoria</h2></div>
+        <div id="auditLog" class="log-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer">Protótipo acadêmico - versão com melhorias parciais em HTML, CSS e JavaScript.</footer>
+  <script src="app.js"></script>
+</body>
+</html>
